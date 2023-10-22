@@ -41,3 +41,6 @@ public class CircleTest {
         System.out.println("Новая площадь окружности: " + circle.calculateArea());
     }
 }
+
+//В этом примере создается класс Circle, который имеет свойство radius и методы для получения и изменения радиуса (getRadius() и setRadius())
+//и для вычисления площади окружности (calculateArea()). Затем этот класс тестируется в классе CircleTest в методе main.
