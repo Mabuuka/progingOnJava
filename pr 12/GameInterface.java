@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.awt.*;
+
 public class GameInterface extends JFrame {
 
     public GameInterface(){
