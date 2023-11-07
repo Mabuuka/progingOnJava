@@ -1,44 +1,81 @@
-import java.util.ArrayDeque;
-import java.util.Queue;
+import javax.swing.*;
+import java.awt.*;
 
-public class Game {
-    Queue<Integer> fp, sp;
+public class GameInterface extends JFrame {
 
-    public Game(String fp, String sp) {
-        this.fp = new ArrayDeque<>();
-        this.sp = new ArrayDeque<>();
-        for(int i = 0; i < 5; i ++){
-            this.fp.add(Integer.parseInt(fp.substring(i, i+1)));
-            this.sp.add(Integer.parseInt(sp.substring(i, i+1)));
-        }
-    }
+    public GameInterface(){
+        super("Игра");
+        setSize(480, 140);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JLabel firstStart = new JLabel(),
+                secondStart = new JLabel(),
+                curAdd = new JLabel("0");
+        JPanel p = new JPanel();
+        BoxLayout b = new BoxLayout(p, BoxLayout.Y_AXIS);
+        p.setLayout(b);
 
-    public String play(){
-        int count = 0;
-        while(!fp.isEmpty() && !sp.isEmpty() && count < 106){
-            if(fp.peek() > sp.peek()
-                    && sp.peek() != 0){
-                fp.add(fp.remove());
-                fp.add(sp.remove());
+        JButton addFirst = new JButton("Первому!"),
+                addSecond = new JButton("Второму!"),
+                playButton = new JButton("Играть");
+        p.add(addFirst);
+        p.add(addSecond);
 
-            }else{
-                sp.add(fp.remove());
-                sp.add(sp.remove());
+        JPanel p1 = new JPanel();
+        p1.add(new JLabel("Первый игрок:"));
+        p1.add(firstStart);
+
+        JPanel p2 = new JPanel();
+        p2.add(new JLabel("Второй игрок:"));
+        p2.add(secondStart);
+
+        JPanel p3 = new JPanel();
+        p3.add( new JLabel("Добавить номер: "));
+        p3.add(curAdd);
+
+        getContentPane().add(p1, BorderLayout.NORTH);
+        getContentPane().add(p2, BorderLayout.SOUTH);
+        getContentPane().add(p3, BorderLayout.CENTER);
+        getContentPane().add(p, BorderLayout.EAST);
+        getContentPane().add(playButton, BorderLayout.WEST);
+
+        playButton.setEnabled(false);
+
+
+        addFirst.addActionListener(e->{
+            firstStart.setText(firstStart.getText()+curAdd.getText());
+            curAdd.setText((new Integer(Integer.parseInt(curAdd.getText())+1)).toString());
+            if(firstStart.getText().length() == 5) {
+                addFirst.setEnabled(false);
+                if(secondStart.getText().length() == 5){
+                    playButton.setEnabled(true);
+                }
             }
-            count++;
-        }
-        String res = "";
-        if(fp.isEmpty()) res += "second ";
-        else if (sp.isEmpty()) res += "first ";
-        res += count;
-        if(count >= 106) res += " botva";
-        return res;
+        });
+        addSecond.addActionListener(e->{
+            secondStart.setText(secondStart.getText()+curAdd.getText());
+            curAdd.setText((new Integer(Integer.parseInt(curAdd.getText())+1)).toString());
+            if(secondStart.getText().length() == 5) {
+                addSecond.setEnabled(false);
+                if(firstStart.getText().length() == 5){
+                    playButton.setEnabled(true);
+                }
+            }
+        });
+
+        playButton.addActionListener(e->{
+            JOptionPane.showMessageDialog(this, new Game(firstStart.getText(), secondStart.getText()).play());
+            firstStart.setText("");
+            secondStart.setText("");
+            curAdd.setText("0");
+            addFirst.setEnabled(true);
+            addSecond.setEnabled(true);
+            playButton.setEnabled(false);
+        });
+
     }
 
     public static void main(String[] args) {
-        System.out.println(new Game("13579", "24680").play());
-        System.out.println(new Game("12345", "67890").play());
-        System.out.println(new Game("13029", "42685").play());
+        new GameInterface().setVisible(true);
     }
-
 }
